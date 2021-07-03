@@ -1,6 +1,9 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const index = require('./routes/index');
+const post = require('./routes/post');
+const review = require('./routes/review');
+const user = require('./routes/user');
 
 const app = express();
 
@@ -9,7 +12,9 @@ app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use('/', index);
-// app.use('/users', users);
+app.use('/post', post);
+app.use('/review', review);
+app.use('/user', user);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
@@ -30,6 +35,6 @@ app.use((err, req, res, next) => {
 // module.exports = app;
 const port = process.env.PORT || 3000;
 
-app.listen(port, function () {
+app.listen(port, () => {
   console.log(`Server started running on ${port}`);
 });
