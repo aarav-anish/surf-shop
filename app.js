@@ -1,5 +1,11 @@
 const express = require('express');
+const session = require('express-session');
 const bodyParser = require('body-parser');
+const passport = require('passport');
+const passportLocalMongoose = require('passport-local-mongoose');
+const User = require('./models/user');
+
+// require routes
 const index = require('./routes/index');
 const post = require('./routes/post');
 const review = require('./routes/review');
@@ -8,9 +14,30 @@ const user = require('./routes/user');
 const app = express();
 
 app.use(express.static('public'));
+app.use(session({
+  secret: 'process.env.SECRET',
+  resave: false,
+  saveUninitialized: true,
+}))
+
+// view engine setup
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
 
+// configure passport and sessions
+passport.use(User.createStrategy());
+
+passport.serializeUser(function (user, done) {
+  done(null, user.id);
+});
+
+passport.deserializeUser(function (id, done) {
+  User.findById(id, function (err, user) {
+    done(err, user);
+  });
+});
+
+// mount routes
 app.use('/', index);
 app.use('/post', post);
 app.use('/review', review);
