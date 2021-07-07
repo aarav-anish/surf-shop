@@ -1,6 +1,8 @@
+require('dotenv').config();
 const express = require('express');
 const session = require('express-session');
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
 const passport = require('passport');
 const passportLocalMongoose = require('passport-local-mongoose');
 const User = require('./models/user');
@@ -14,15 +16,31 @@ const user = require('./routes/user');
 const app = express();
 
 app.use(express.static('public'));
-app.use(session({
-  secret: 'process.env.SECRET',
-  resave: false,
-  saveUninitialized: true,
-}))
+app.use(
+  session({
+    secret: 'process.env.SECRET',
+    resave: false,
+    saveUninitialized: true,
+  }),
+);
+app.use(passport.initialize());
+app.use(passport.session());
 
 // view engine setup
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
+
+// mongoose connection
+mongoose.connect('mongodb://localhost:27017/surfshop', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useCreateIndex: true,
+});
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function () {
+  console.log("we're connected!");
+});
 
 // configure passport and sessions
 passport.use(User.createStrategy());
@@ -54,9 +72,16 @@ app.use((err, req, res, next) => {
   res.locals.message = err.message;
   res.locals.err = req.app.get('env') === 'devlopment' ? err : {};
 
+  let status = err.status || 500;
+  console.log(err.stack);
+
   //render the error page
-  res.status(err.status || 500);
-  res.render('error');
+  res.status(status);
+  res.render('error', {
+    message: err.message,
+    status: status,
+    stack: err.stack,
+  });
 });
 
 // module.exports = app;
