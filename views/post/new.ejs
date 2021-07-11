@@ -1,0 +1,43 @@
+<%- include('../partials/header') -%>
+
+<div>
+  <h1>Write a new post</h1>
+  <form method="POST" action="/post">
+    <div class="form-group">
+      <label> Title </label>
+      <input
+        class="form-control"
+        type="text"
+        placeholder="title"
+        name="title"
+      />
+      <label> Description </label>
+      <textarea
+        class="form-control"
+        name="description"
+        id=""
+        cols="30"
+        rows="10"
+      ></textarea>
+      <label> Price </label>
+      <input
+        class="form-control"
+        type="text"
+        placeholder="price"
+        name="price"
+      />
+      <label> location </label>
+      <input
+        class="form-control"
+        type="text"
+        placeholder="location"
+        name="location"
+      />
+      <button class="btn btn-primary" type="submit" name="publish">
+        Publish
+      </button>
+    </div>
+  </form>
+</div>
+
+<%- include('../partials/footer') -%>

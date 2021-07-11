@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 var postSchema = new Schema({
   title: String,
-  desciption: String,
+  description: String,
   price: String,
   images: [String],
   location: String,

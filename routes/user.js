@@ -1,6 +1,6 @@
 const express = require('express');
 const { errorHandler } = require('../middleware/index');
-const { postRegister, postLogin, getLogout } = require('../controllers/index');
+const { postRegister, postLogin, getLogout } = require('../controllers/user');
 
 const router = express.Router();
 
