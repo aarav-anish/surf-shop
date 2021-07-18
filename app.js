@@ -22,7 +22,7 @@ const user = require('./routes/user');
 const app = express();
 
 app.use(express.static('public'));
-app.use(morgan('combined'));
+app.use(morgan('dev'));
 app.use(cors());
 app.use(
   session({
@@ -71,29 +71,6 @@ app.use('/post', post);
 app.use('/review', review);
 app.use('/user', user);
 
-// catch 404 and forward to error handler
-// app.use((req, res, next) => {
-//   const err = new Error('Not found');
-//   err.status = 404;
-//   next(err);
-// });
-
-// app.use((err, req, res, next) => {
-//   res.locals.message = err.message;
-//   res.locals.err = req.app.get('env') === 'devlopment' ? err : {};
-
-//   let status = err.status || 500;
-//   console.log(err.stack);
-
-//   //render the error page
-//   res.status(status);
-//   res.render('error', {
-//     message: err.message,
-//     status: status,
-//     stack: err.stack,
-//   });
-// });
-
 app.use(errorHandler);
 app.use(notFound);
 
@@ -102,5 +79,3 @@ const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`Server started running on ${port}`);
 });
-
-module.exports = app;

@@ -1,13 +1,18 @@
 <%- include("../partials/header") -%>
 
-<h1 class="heading"><%= postTitle %></h1>
-<p><%= postDescription %></p>
-<p><%= postPrice %></p>
-<p><%= location %></p>
-<a href="/post/edit/<%= postId %> ">
+<h1 class="heading"><%= post.title %></h1>
+<p><%= post.description %></p>
+<div>
+  <% post.images.forEach((image) => { %>
+  <img src="<%= image.url %> " alt="surf-image" width="200px" />
+  <% }) %>
+</div>
+<p><%= post.price %></p>
+<p><%= post.location %></p>
+<a href="/post/edit/<%= post._id %> ">
   <button class="btn btn-dark">Edit</button>
 </a>
-<form action="/post/<%= postId %>?_method=DELETE" method="POST">
+<form action="/post/<%= post._id %>?_method=DELETE" method="POST">
   <button class="btn btn-danger" title="Delete" type="submit">
     <i class="fas fa-2x fa-trash"></i>
   </button>

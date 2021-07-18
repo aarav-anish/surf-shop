@@ -2,7 +2,7 @@
 
 <div>
   <h1>Write a new post</h1>
-  <form method="POST" action="/post">
+  <form method="POST" action="/post" enctype="multipart/form-data">
     <div class="form-group">
       <label> Title </label>
       <input
@@ -15,10 +15,17 @@
       <textarea
         class="form-control"
         name="description"
-        id=""
         cols="30"
         rows="10"
       ></textarea>
+      <label>Images</label>
+      <input
+        class="form-control"
+        type="file"
+        accept="images/*"
+        name="images"
+        multiple
+      />
       <label> Price </label>
       <input
         class="form-control"

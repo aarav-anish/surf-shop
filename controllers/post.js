@@ -1,4 +1,11 @@
 const Post = require('../models/post');
+const cloudinary = require('cloudinary');
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 // Post Get
 let postIndex = async (req, res, next) => {
@@ -22,6 +29,14 @@ let postNew = async (req, res, next) => {
 
 // Post Create
 let postCreate = async (req, res, next) => {
+  req.body.images = [];
+  for (const file of req.files) {
+    let image = await cloudinary.v2.uploader.upload(file.path);
+    req.body.images.push({
+      url: image.secure_url,
+      public_id: image.public_id,
+    });
+  }
   let post = await Post.create(req.body);
   if (post) {
     console.log(post);
@@ -40,13 +55,7 @@ let postShow = async (req, res, next) => {
 
   if (post) {
     console.log(post);
-    res.render('post/show', {
-      postTitle: post.title,
-      postId: post._id,
-      postDescription: post.description,
-      postPrice: post.price,
-      location: post.location,
-    });
+    res.render('post/show', { post });
   } else {
     res.status(404).json({
       status: false,
@@ -75,7 +84,7 @@ let postEdit = async (req, res, next) => {
   }
 };
 
-// Post Put
+// Post Update
 let postUpdate = async (req, res, next) => {
   let post = await Post.findByIdAndUpdate(req.params.id, req.body);
   if (post) {

@@ -5,7 +5,7 @@ var postSchema = new Schema({
   title: String,
   description: String,
   price: String,
-  images: [String],
+  images: [{ url: String, public_id: String }],
   location: String,
   lattitude: String,
   longitude: String,

@@ -1,4 +1,6 @@
 const express = require('express');
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' });
 const { asyncErrorHandler } = require('../middleware/errors');
 const {
   postIndex,
@@ -19,7 +21,7 @@ router.get('/', asyncErrorHandler(postIndex));
 router.get('/new', postNew);
 
 // POST create /post
-router.post('/', asyncErrorHandler(postCreate));
+router.post('/', upload.array('images', 4), asyncErrorHandler(postCreate));
 
 // GET show /post/:id
 router.get('/:id', asyncErrorHandler(postShow));

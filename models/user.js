@@ -13,12 +13,6 @@ var userSchema = new Schema({
     required: true,
   },
   image: String,
-  posts: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: 'Post',
-    },
-  ],
 });
 
 userSchema.plugin(passportLocalMongoose);
