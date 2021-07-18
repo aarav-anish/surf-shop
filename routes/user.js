@@ -1,5 +1,5 @@
 const express = require('express');
-const { errorHandler } = require('../middleware/index');
+const { asyncErrorHandler } = require('../middleware/errors');
 const { postRegister, postLogin, getLogout } = require('../controllers/user');
 
 const router = express.Router();
@@ -14,10 +14,10 @@ router.get('/', (req, res, next) => {
 router.get('/register', (req, res, next) => {});
 
 // POST register /user/register
-router.post('/register', errorHandler(postRegister));
+router.post('/register', asyncErrorHandler(postRegister));
 
 // POST login /user/login
-router.post('/login', errorHandler(postLogin));
+router.post('/login', asyncErrorHandler(postLogin));
 
 // GET login /user/login
 router.get('/login', (req, res, next) => {
@@ -28,7 +28,7 @@ router.get('/login', (req, res, next) => {
 router.get('/profile', (req, res, next) => {});
 
 // GET logout /user/logout
-router.get('/logout', errorHandler(getLogout));
+router.get('/logout', asyncErrorHandler(getLogout));
 
 // GET forgot /user/forgot
 router.get('/forgot', (req, res, next) => {});

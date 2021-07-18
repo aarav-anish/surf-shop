@@ -1,7 +1,7 @@
 const Post = require('../models/post');
 
 // Post Get
-let getPost = async (req, res, next) => {
+let postIndex = async (req, res, next) => {
   let posts = await Post.find({});
   console.log(posts);
   if (posts.length > 0) {
@@ -16,19 +16,26 @@ let getPost = async (req, res, next) => {
 };
 
 // Post New
-let newPost = async (req, res, next) => {
+let postNew = async (req, res, next) => {
   res.render('post/new');
 };
 
 // Post Create
-let createPost = async (req, res, next) => {
+let postCreate = async (req, res, next) => {
   let post = await Post.create(req.body);
-  console.log(post);
-  res.redirect(`/post/${post._id}`);
+  if (post) {
+    console.log(post);
+    res.redirect(`/post/${post._id}`);
+  } else {
+    res.status(500).json({
+      status: false,
+      message: 'Internal server error',
+    });
+  }
 };
 
 // Post Show
-let showPost = async (req, res, next) => {
+let postShow = async (req, res, next) => {
   let post = await Post.findById(req.params.id);
 
   if (post) {
@@ -36,7 +43,7 @@ let showPost = async (req, res, next) => {
     res.render('post/show', {
       postTitle: post.title,
       postId: post._id,
-      postContent: post.description,
+      postDescription: post.description,
       postPrice: post.price,
       location: post.location,
     });
@@ -48,38 +55,60 @@ let showPost = async (req, res, next) => {
   }
 };
 
-// Post Update
-let updatePost = async (req, res, next) => {
-  let post = await Post.findOneAndUpdate(req.params.id, req.body);
+// Post Edit
+let postEdit = async (req, res, next) => {
+  let post = await Post.findById(req.params.id);
   if (post) {
     console.log(post);
-    res.render('post/new', { post: post });
+    res.render('post/edit', {
+      postId: post._id,
+      postTitle: post.title,
+      postDescription: post.description,
+      postPrice: post.price,
+      location: post.location,
+    });
+  } else {
+    res.status(404).json({
+      status: false,
+      message: 'post not found',
+    });
   }
 };
 
 // Post Put
-let putPost = async (req, res, next) => {
-  let post = await Post.findOneAndUpdate(req.params.id, req.body);
+let postUpdate = async (req, res, next) => {
+  let post = await Post.findByIdAndUpdate(req.params.id, req.body);
   if (post) {
     console.log(post);
-    res.redirect(`post/${post._id}`);
+    res.redirect(`/post/${post._id}`);
+  } else {
+    res.status(404).json({
+      status: false,
+      message: 'post not found',
+    });
   }
 };
 
 // Post Delete
-let deletePost = async (req, res, next) => {
-  let post = await Post.findByIdAndDelete(req.params.id, req.body);
+let postDelete = async (req, res, next) => {
+  let post = await Post.findByIdAndDelete(req.params.id);
   if (post) {
     console.log(post);
     res.redirect('/post');
+  } else {
+    res.status(404).json({
+      status: false,
+      message: 'post not found',
+    });
   }
 };
 
 module.exports = {
-  getPost,
-  newPost,
-  createPost,
-  showPost,
-  updatePost,
-  deletePost,
+  postIndex,
+  postNew,
+  postCreate,
+  postShow,
+  postEdit,
+  postUpdate,
+  postDelete,
 };

@@ -1,32 +1,36 @@
 const express = require('express');
-const { errorHandler } = require('../middleware/index');
+const { asyncErrorHandler } = require('../middleware/errors');
 const {
-  getPost,
-  newPost,
-  createPost,
-  showPost,
-  updatePost,
-  deletePost,
+  postIndex,
+  postNew,
+  postCreate,
+  postShow,
+  postEdit,
+  postUpdate,
+  postDelete,
 } = require('../controllers/post');
 
 const router = express.Router();
 
-// GET post index /post
-router.get('/', errorHandler(getPost));
+// GET index /post
+router.get('/', asyncErrorHandler(postIndex));
 
-// GET post new /post
-router.get('/new', errorHandler(newPost));
+// GET new /post/new
+router.get('/new', postNew);
 
-// POST post /post
-router.post('/', errorHandler(createPost));
+// POST create /post
+router.post('/', asyncErrorHandler(postCreate));
 
-// GET post show /post/:id
-router.get('/:id', errorHandler(showPost));
+// GET show /post/:id
+router.get('/:id', asyncErrorHandler(postShow));
 
-// PUT post update /post/:id
-router.put('/:id', errorHandler(updatePost));
+// GET edit /post/edit/:id
+router.get('/edit/:id', asyncErrorHandler(postEdit));
 
-// DELETE post destroy /post/:id
-router.delete('/:id', errorHandler(deletePost));
+// PUT update /post/:id
+router.put('/:id', asyncErrorHandler(postUpdate));
+
+// DELETE destroy /post/:id
+router.delete('/:id', asyncErrorHandler(postDelete));
 
 module.exports = router;
