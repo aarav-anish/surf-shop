@@ -2,10 +2,16 @@ require('dotenv').config();
 const express = require('express');
 const session = require('express-session');
 const bodyParser = require('body-parser');
+const morgan = require('morgan');
+const cors = require('cors');
+const path = require('path');
 const mongoose = require('mongoose');
+const methodOverride = require('method-override');
 const passport = require('passport');
 const passportLocalMongoose = require('passport-local-mongoose');
 const User = require('./models/user');
+
+const { errorHandler, notFound } = require('./middleware/errors');
 
 // require routes
 const index = require('./routes/index');
@@ -16,6 +22,8 @@ const user = require('./routes/user');
 const app = express();
 
 app.use(express.static('public'));
+app.use(morgan('combined'));
+app.use(cors());
 app.use(
   session({
     secret: 'process.env.SECRET',
@@ -29,6 +37,8 @@ app.use(passport.session());
 // view engine setup
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(methodOverride('_method'));
 
 // mongoose connection
 mongoose.connect('mongodb://localhost:27017/surfshop', {
@@ -62,31 +72,35 @@ app.use('/review', review);
 app.use('/user', user);
 
 // catch 404 and forward to error handler
-app.use((req, res, next) => {
-  const err = new Error('Not found');
-  err.status = 404;
-  next(err);
-});
+// app.use((req, res, next) => {
+//   const err = new Error('Not found');
+//   err.status = 404;
+//   next(err);
+// });
 
-app.use((err, req, res, next) => {
-  res.locals.message = err.message;
-  res.locals.err = req.app.get('env') === 'devlopment' ? err : {};
+// app.use((err, req, res, next) => {
+//   res.locals.message = err.message;
+//   res.locals.err = req.app.get('env') === 'devlopment' ? err : {};
 
-  let status = err.status || 500;
-  console.log(err.stack);
+//   let status = err.status || 500;
+//   console.log(err.stack);
 
-  //render the error page
-  res.status(status);
-  res.render('error', {
-    message: err.message,
-    status: status,
-    stack: err.stack,
-  });
-});
+//   //render the error page
+//   res.status(status);
+//   res.render('error', {
+//     message: err.message,
+//     status: status,
+//     stack: err.stack,
+//   });
+// });
 
-// module.exports = app;
+app.use(errorHandler);
+app.use(notFound);
+
 const port = process.env.PORT || 3000;
 
 app.listen(port, () => {
   console.log(`Server started running on ${port}`);
 });
+
+module.exports = app;
