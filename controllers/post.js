@@ -69,13 +69,7 @@ let postEdit = async (req, res, next) => {
   let post = await Post.findById(req.params.id);
   if (post) {
     console.log(post);
-    res.render('post/edit', {
-      postId: post._id,
-      postTitle: post.title,
-      postDescription: post.description,
-      postPrice: post.price,
-      location: post.location,
-    });
+    res.render('post/edit', { post });
   } else {
     res.status(404).json({
       status: false,
