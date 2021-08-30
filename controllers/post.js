@@ -124,9 +124,13 @@ let postUpdate = async (req, res, next) => {
 
 // Post Delete
 let postDelete = async (req, res, next) => {
-  let post = await Post.findByIdAndDelete(req.params.id);
+  let post = await Post.findById(req.params.id);
+  for (const image of post.images) {
+    await cloudinary.v2.uploader.destroy(image.public_id);
+  }
   if (post) {
     console.log(post);
+    post.remove();
     res.redirect('/post');
   } else {
     res.status(404).json({
