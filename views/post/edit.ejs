@@ -31,9 +31,14 @@
       />
       <div>
         <% post.images.forEach((image) => { %>
-        <img src="<%= image.url %> " alt="surf-image" width="200px" />
-        <input name="deleteImage" type="checkbox" class="imagesDeleteCheckbox" />
-        <label> Delete ? </label>
+          <img src="<%= image.url %> " alt="surf-image" width="200px" />
+          <input 
+            name="deleteImages[]" 
+            type="checkbox" 
+            class="imagesDeleteCheckbox" 
+            value="<%= image.public_id %>"
+          />
+          <label> Delete ? </label>
         <% }) %>
       </div>
       <label> Price </label>
@@ -80,7 +85,7 @@
 
       console.log(existingImages, imageUploads, imageDeletions);
       alert(
-        `You need to delete at least ${newTotal - 4} image${
+        `You need to delete at least ${newTotal - 4} more image${
           newTotal === 5 ? '' : 's'
         }`,
       );

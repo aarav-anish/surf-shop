@@ -80,16 +80,46 @@ let postEdit = async (req, res, next) => {
 
 // Post Update
 let postUpdate = async (req, res, next) => {
-  let post = await Post.findByIdAndUpdate(req.params.id, req.body);
-  if (post) {
-    console.log(post);
-    res.redirect(`/post/${post._id}`);
-  } else {
+  let post = await Post.findById(req.params.id);
+  if (!post) {
     res.status(404).json({
       status: false,
       message: 'post not found',
     });
   }
+  let deleteImages = req.body.deleteImages;
+  if (deleteImages?.length > 0) {
+    for (const public_id of deleteImages) {
+      // delete images from cloudinary
+      await cloudinary.v2.uploader.destroy(public_id);
+      // delete image from post.images
+      post.images.forEach((image, index) => {
+        if (image.public_id === public_id) {
+          post.images.splice(index, 1);
+        }
+      });
+    }
+  }
+
+  if (req.files) {
+    for (const file of req.files) {
+      let image = await cloudinary.v2.uploader.upload(file.path);
+      post.images.push({
+        url: image.secure_url,
+        public_id: image.public_id,
+      });
+    }
+  }
+  // update the post with any new properties
+  post.title = req.body.title;
+  post.description = req.body.description;
+  post.price = req.body.price;
+  post.location = req.body.location;
+
+  let updatedPost = await post.save();
+  console.log(updatedPost);
+
+  res.redirect(`/post/${post._id}`);
 };
 
 // Post Delete
