@@ -1,3 +1,6 @@
+<!-- Tutorial followed for displaying map: 
+https://docs.mapbox.com/help/tutorials/custom-markers-gl-js/ -->
+
 <%- include("../partials/header") -%>
 
 <h1 class="heading"><%= post.title %></h1>
@@ -9,6 +12,9 @@
 </div>
 <p><%= post.price %></p>
 <p><%= post.location %></p>
+
+<div id="map"></div>
+
 <a href="/post/edit/<%= post._id %> ">
   <button class="btn btn-dark">Edit</button>
 </a>
@@ -20,5 +26,61 @@
 <a href="/post/new" title="Compose">
   <i class="fas fa-plus-circle fa-4x compose"></i>
 </a>
+
+<script>
+  mapboxgl.accessToken =
+    'pk.eyJ1IjoiYWFyYXYtYW5pc2giLCJhIjoiY2tzeXgzaGJ5Mmd6aTJwcG53eGwwNjdnOCJ9.nWIPFT3f0f1G_7IWJ9By1A';
+  const map = new mapboxgl.Map({
+    container: 'map', // container ID
+    style: 'mapbox://styles/mapbox/light-v10', // style URL
+    center: [-96, 37.8], // starting position [lng, lat]
+    zoom: 3, // starting zoom
+  });
+  const geojson = {
+    type: 'FeatureCollection',
+    features: [
+      {
+        type: 'Feature',
+        geometry: {
+          type: 'Point',
+          coordinates: [-77.032, 38.913],
+        },
+        properties: {
+          title: 'Mapbox',
+          description: 'Washington, D.C.',
+        },
+      },
+      {
+        type: 'Feature',
+        geometry: {
+          type: 'Point',
+          coordinates: [-122.414, 37.776],
+        },
+        properties: {
+          title: 'Mapbox',
+          description: 'San Francisco, California',
+        },
+      },
+    ],
+  };
+
+  // add markers to map
+  for (const { geometry, properties } of geojson.features) {
+    // create a HTML element for each feature
+    const el = document.createElement('div');
+    el.className = 'marker';
+
+    // make a marker for each feature and add to the map
+    new mapboxgl.Marker(el)
+      .setLngLat(geometry.coordinates)
+      .setPopup(
+        new mapboxgl.Popup({ offset: 25 }) // add popups
+          .setHTML(
+            `<h3>${properties.title}</h3><p>${properties.description}</p>`,
+          ),
+      )
+      .addTo(map);
+  }
+</script>
 
 <%- include("../partials/footer") -%>
