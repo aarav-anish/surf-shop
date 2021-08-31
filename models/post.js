@@ -7,8 +7,7 @@ var postSchema = new Schema({
   price: String,
   images: [{ url: String, public_id: String }],
   location: String,
-  lattitude: String,
-  longitude: String,
+  coordinates: Array,
   author: {
     type: Schema.Types.ObjectId,
     ref: 'User',
