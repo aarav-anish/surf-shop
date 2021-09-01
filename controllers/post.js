@@ -121,11 +121,22 @@ let postUpdate = async (req, res, next) => {
       });
     }
   }
+
+  if (post.location !== req.body.location) {
+    let response = await geocodingClient
+      .forwardGeocode({
+        query: req.body.location,
+        limit: 1,
+      })
+      .send();
+    post.coordinates = response.body.features[0].geometry.coordinates;
+    post.location = req.body.location;
+  }
+
   // update the post with any new properties
   post.title = req.body.title;
   post.description = req.body.description;
   post.price = req.body.price;
-  post.location = req.body.location;
 
   let updatedPost = await post.save();
   console.log(updatedPost);
