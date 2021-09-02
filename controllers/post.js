@@ -15,7 +15,7 @@ let postIndex = async (req, res, next) => {
   console.log(posts);
   if (posts.length > 0) {
     console.log(posts);
-    res.render('post/index', { posts: posts });
+    res.render('post/index', { title: 'Post Index', posts: posts });
   } else {
     res.status(404).json({
       status: false,
@@ -26,7 +26,7 @@ let postIndex = async (req, res, next) => {
 
 // Post New
 let postNew = async (req, res, next) => {
-  res.render('post/new');
+  res.render('post/new', { title: 'New Post' });
 };
 
 // Post Create
@@ -66,7 +66,7 @@ let postShow = async (req, res, next) => {
 
   if (post) {
     console.log(post);
-    res.render('post/show', { post });
+    res.render('post/show', { title: 'Show Post', post });
   } else {
     res.status(404).json({
       status: false,
@@ -80,7 +80,7 @@ let postEdit = async (req, res, next) => {
   let post = await Post.findById(req.params.id);
   if (post) {
     console.log(post);
-    res.render('post/edit', { post });
+    res.render('post/edit', { title: 'Edit Post', post });
   } else {
     res.status(404).json({
       status: false,

@@ -11,6 +11,7 @@ const passport = require('passport');
 const passportLocalMongoose = require('passport-local-mongoose');
 const User = require('./models/user');
 
+const { pageTitle } = require('./middleware/title');
 const { errorHandler, notFound } = require('./middleware/errors');
 
 // require routes
@@ -65,12 +66,16 @@ passport.deserializeUser(function (id, done) {
   });
 });
 
+// middleware for page title
+app.use(pageTitle);
+
 // mount routes
 app.use('/', index);
 app.use('/post', post);
 app.use('/review', review);
 app.use('/user', user);
 
+// middleware for handling errors
 app.use(errorHandler);
 app.use(notFound);
 

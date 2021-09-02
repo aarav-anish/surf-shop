@@ -4,6 +4,7 @@ const errorHandler = (error, req, res, next) => {
 
   res.status(statusCode);
   res.render('error', {
+    title: 'Error !',
     message: error.message,
     status: statusCode,
     stack: error.stack,
@@ -16,6 +17,7 @@ const notFound = (req, res, next) => {
 
   res.status(404);
   res.render('error', {
+    title: 'Error !',
     message: error.message,
     status: 404,
     stack: error.stack,
