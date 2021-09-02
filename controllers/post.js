@@ -17,10 +17,12 @@ let postIndex = async (req, res, next) => {
     console.log(posts);
     res.render('post/index', { title: 'Post Index', posts: posts });
   } else {
-    res.status(404).json({
-      status: false,
-      message: 'no posts found',
-    });
+    // res.status(404).json({
+    //   status: false,
+    //   message: 'no posts found',
+    // });
+
+    throw new Error('No posts found. Click on + to create a new post');
   }
 };
 
@@ -40,23 +42,28 @@ let postCreate = async (req, res, next) => {
     });
   }
 
-  let response = await geocodingClient
-    .forwardGeocode({
-      query: req.body.location,
-      limit: 1,
-    })
-    .send();
-  req.body.coordinates = response.body.features[0].geometry.coordinates;
+  if (req.body.location) {
+    let response = await geocodingClient
+      .forwardGeocode({
+        query: req.body.location,
+        limit: 1,
+      })
+      .send();
+    req.body.coordinates = response.body.features[0].geometry.coordinates;
+  }
 
   let post = await Post.create(req.body);
   if (post) {
     console.log(post);
+    req.session.success = 'Post created successfully';
     res.redirect(`/post/${post._id}`);
   } else {
-    res.status(500).json({
-      status: false,
-      message: 'Internal server error',
-    });
+    // res.status(500).json({
+    //   status: false,
+    //   message: 'Internal server error',
+    // });
+
+    throw new Error('Internal Server Error');
   }
 };
 
@@ -68,10 +75,12 @@ let postShow = async (req, res, next) => {
     console.log(post);
     res.render('post/show', { title: 'Show Post', post });
   } else {
-    res.status(404).json({
-      status: false,
-      message: 'post not found',
-    });
+    // res.status(404).json({
+    //   status: false,
+    //   message: 'post not found',
+    // });
+
+    throw new Error('Requested post not found');
   }
 };
 
@@ -82,10 +91,12 @@ let postEdit = async (req, res, next) => {
     console.log(post);
     res.render('post/edit', { title: 'Edit Post', post });
   } else {
-    res.status(404).json({
-      status: false,
-      message: 'post not found',
-    });
+    // res.status(404).json({
+    //   status: false,
+    //   message: 'post not found',
+    // });
+
+    throw new Error('Requested post not found');
   }
 };
 
@@ -93,10 +104,12 @@ let postEdit = async (req, res, next) => {
 let postUpdate = async (req, res, next) => {
   let post = await Post.findById(req.params.id);
   if (!post) {
-    res.status(404).json({
-      status: false,
-      message: 'post not found',
-    });
+    // res.status(404).json({
+    //   status: false,
+    //   message: 'post not found',
+    // });
+
+    throw new Error('Requested post not found');
   }
   let deleteImages = req.body.deleteImages;
   if (deleteImages?.length > 0) {
@@ -139,9 +152,18 @@ let postUpdate = async (req, res, next) => {
   post.price = req.body.price;
 
   let updatedPost = await post.save();
-  console.log(updatedPost);
+  if (updatedPost) {
+    console.log(updatedPost);
+    req.session.success = 'Post updated successfully';
+    res.redirect(`/post/${post._id}`);
+  } else {
+    // res.status(500).json({
+    //   status: false,
+    //   message: 'Internal server error',
+    // });
 
-  res.redirect(`/post/${post._id}`);
+    throw new Error('Internal Server Error');
+  }
 };
 
 // Post Delete
@@ -155,10 +177,12 @@ let postDelete = async (req, res, next) => {
     post.remove();
     res.redirect('/post');
   } else {
-    res.status(404).json({
-      status: false,
-      message: 'post not found',
-    });
+    // res.status(404).json({
+    //   status: false,
+    //   message: 'post not found',
+    // });
+
+    throw new Error('Requested post not found');
   }
 };
 

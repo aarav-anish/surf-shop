@@ -21,6 +21,16 @@ body {
   color: #1abc9c !important;
 }
 
+.success {
+  background-color: green;
+  color: white;
+}
+
+.error {
+  background-color: red;
+  color: white;
+}
+
 .heading {
   display: inline;
 }
