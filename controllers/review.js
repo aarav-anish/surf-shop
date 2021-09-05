@@ -42,9 +42,14 @@ let reviewUpdate = async (req, res, next) => {
 
 // review Delete
 let reviewDelete = async (req, res, next) => {
-  let review = await Review.findByIdAndDelete(req.params.id);
+  let review = await Review.findOneAndDelete({
+    _id: req.params.id,
+    postId: req.body.postId,
+  });
   if (review) {
-    console.log(review);
+    await Post.findByIdAndUpdate(req.body.postId, {
+      $pull: { review: review._id },
+    });
     req.session.success = 'Review deleted successfully';
     res.redirect(`/post/${req.body.postId}`);
   } else {

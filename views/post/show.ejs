@@ -7,7 +7,7 @@ https://docs.mapbox.com/help/tutorials/custom-markers-gl-js/ -->
 <p><%= post.description %></p>
 <div>
   <% post.images.forEach((image) => { %>
-    <img src="<%= image.url %> " alt="surf-image" width="200px" />
+  <img src="<%= image.url %> " alt="surf-image" width="200px" />
   <% }) %>
 </div>
 <p><%= post.price %></p>
@@ -47,13 +47,62 @@ https://docs.mapbox.com/help/tutorials/custom-markers-gl-js/ -->
 
 <h3>Reviews</h3>
 <% post.review.forEach((review) => { %>
-  <p>
-    <strong>Author: </strong><%= review.author.username %>
-    <br />
-    <%= review.body %>
-    <br />
-    <strong>Rating: </strong><%= review.rating %>
-  </p>
+<div>
+  <strong>Author: </strong><%= review.author.username %>
+  <br />
+  <%= review.body %>
+  <br />
+  <strong>Rating: </strong><%= review.rating %>
+  <br />
+  <button class="btn btn-warning toggle-edit-form">Edit</button>
+  <form action="/review/<%= review._id %>?_method=DELETE" method="POST">
+    <input type="hidden" name="postId" value="<%= post._id %>" />
+    <button class="btn btn-danger" title="delete-review" type="submit">
+      <i class="fas fa-2x fa-trash"></i>
+    </button>
+  </form>
+  <form
+    class="edit-review-form hide"
+    method="POST"
+    action="/review/<%= review._id %>?_method=PUT"
+  >
+    <div class="form-group">
+      <input type="hidden" name="postId" value="<%= post._id %>" />
+      <textarea class="form-control" name="body"><%=review.body%></textarea>
+      <label> Rating </label>
+      <input
+        type="number"
+        min="1"
+        max="5"
+        step="1"
+        name="rating"
+        value="<%= review.rating %>"
+        required
+      />
+      <button class="btn btn-primary" type="submit" name="update">
+        Update
+      </button>
+    </div>
+  </form>
+  <br /><br />
+</div>
 <% }) %>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+<script>
+  $('.toggle-edit-form').on('click', function () {
+    if ($(this).text() === 'Edit') {
+      $(this)
+        .text('Cancel')
+        .removeClass('btn-warning')
+        .addClass('btn-secondary');
+      $(this).siblings('.edit-review-form').removeClass('hide');
+    } else {
+      $(this).text('Edit').removeClass('btn-secondary').addClass('btn-warning');
+      $(this).siblings('.edit-review-form').addClass('hide');
+    }
+  });
+</script>
 
 <%- include("../partials/footer") -%>
