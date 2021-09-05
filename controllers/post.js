@@ -14,7 +14,6 @@ let postIndex = async (req, res, next) => {
   let posts = await Post.find({});
   console.log(posts);
   if (posts.length > 0) {
-    console.log(posts);
     res.render('post/index', { title: 'Post Index', posts: posts });
   } else {
     // res.status(404).json({
@@ -69,7 +68,11 @@ let postCreate = async (req, res, next) => {
 
 // Post Show
 let postShow = async (req, res, next) => {
-  let post = await Post.findById(req.params.id);
+  let post = await Post.findById(req.params.id).populate({
+    path: 'review',
+    select: 'body rating',
+    options: { sort: { _id: -1 } },
+  });
 
   if (post) {
     console.log(post);
@@ -175,6 +178,7 @@ let postDelete = async (req, res, next) => {
   if (post) {
     console.log(post);
     post.remove();
+    req.session.success = 'Post deleted successfully';
     res.redirect('/post');
   } else {
     // res.status(404).json({
