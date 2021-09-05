@@ -3,9 +3,10 @@ const Review = require('../models/review');
 
 // Review Create
 let reviewCreate = async (req, res, next) => {
-  console.log(req.body);
   let post = await Post.findById(req.body.postId);
   if (post) {
+    req.body.author = req.user._id;
+    console.log(req.body);
     let review = await Review.create(req.body);
     console.log(review);
     post.review.push(review._id);

@@ -42,7 +42,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 
 // mongoose connection
-mongoose.connect('mongodb://localhost:27017/surfshop-mapbox', {
+mongoose.connect('mongodb://localhost:27017/surfshop', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useCreateIndex: true,

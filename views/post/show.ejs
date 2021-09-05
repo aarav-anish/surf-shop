@@ -48,6 +48,8 @@ https://docs.mapbox.com/help/tutorials/custom-markers-gl-js/ -->
 <h3>Reviews</h3>
 <% post.review.forEach((review) => { %>
   <p>
+    <strong>Author: </strong><%= review.author.username %>
+    <br />
     <%= review.body %>
     <br />
     <strong>Rating: </strong><%= review.rating %>

@@ -1,4 +1,9 @@
 const preRoute = (req, res, next) => {
+  req.user = {
+    _id: '61346591dce12959b4ab9fc8',
+    username: 'anish',
+  };
+  res.locals.currentUser = req.user;
   // set default page title
   res.locals.title = 'Surf Shop';
   // set success flash message

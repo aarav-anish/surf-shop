@@ -70,8 +70,12 @@ let postCreate = async (req, res, next) => {
 let postShow = async (req, res, next) => {
   let post = await Post.findById(req.params.id).populate({
     path: 'review',
-    select: 'body rating',
+    select: 'author body rating',
     options: { sort: { _id: -1 } },
+    populate: {
+      path: 'author',
+      select: 'username',
+    },
   });
 
   if (post) {
