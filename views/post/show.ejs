@@ -86,23 +86,6 @@ https://docs.mapbox.com/help/tutorials/custom-markers-gl-js/ -->
   </form>
   <br /><br />
 </div>
-<% }) %>
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-
-<script>
-  $('.toggle-edit-form').on('click', function () {
-    if ($(this).text() === 'Edit') {
-      $(this)
-        .text('Cancel')
-        .removeClass('btn-warning')
-        .addClass('btn-secondary');
-      $(this).siblings('.edit-review-form').removeClass('hide');
-    } else {
-      $(this).text('Edit').removeClass('btn-secondary').addClass('btn-warning');
-      $(this).siblings('.edit-review-form').addClass('hide');
-    }
-  });
-</script>
+<% }) %> 
 
 <%- include("../partials/footer") -%>
