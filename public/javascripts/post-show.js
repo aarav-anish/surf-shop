@@ -24,9 +24,8 @@ new mapboxgl.Marker(el)
 $('.toggle-edit-form').on('click', function () {
   if ($(this).text() === 'Edit') {
     $(this).text('Cancel').removeClass('btn-warning').addClass('btn-secondary');
-    $(this).siblings('.edit-review-form').removeClass('hide');
   } else {
     $(this).text('Edit').removeClass('btn-secondary').addClass('btn-warning');
-    $(this).siblings('.edit-review-form').addClass('hide');
   }
+  $(this).siblings('.edit-review-form').toggle();
 });

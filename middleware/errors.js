@@ -1,3 +1,5 @@
+const Review = require('../models/review');
+
 const errorHandler = (error, req, res, next) => {
   // const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
   console.log(error);
@@ -36,8 +38,21 @@ const asyncErrorHandler = (fn) => {
   };
 };
 
+const isReviewAuthor = async (req, res, next) => {
+  let review = await Review.findOne({
+    _id: req.params.id,
+    author: req.user._id,
+  });
+  if (review) {
+    return next();
+  }
+  req.session.error = 'Unauthorized access';
+  return res.redirect('/');
+};
+
 module.exports = {
   notFound,
   errorHandler,
   asyncErrorHandler,
+  isReviewAuthor,
 };

@@ -24,11 +24,6 @@ https://docs.mapbox.com/help/tutorials/custom-markers-gl-js/ -->
   </button>
 </form>
 
-<script>
-  let post = <%- JSON.stringify(post) %>
-</script>
-<script src="/javascripts/post-show.js"></script>
-
 <h2>Add a review</h2>
 <form method="POST" action="/review">
   <div class="form-group">
@@ -54,6 +49,8 @@ https://docs.mapbox.com/help/tutorials/custom-markers-gl-js/ -->
   <br />
   <strong>Rating: </strong><%= review.rating %>
   <br />
+
+  <% if(review.author._id.equals(currentUser._id)) { %>
   <button class="btn btn-warning toggle-edit-form">Edit</button>
   <form action="/review/<%= review._id %>?_method=DELETE" method="POST">
     <input type="hidden" name="postId" value="<%= post._id %>" />
@@ -84,8 +81,15 @@ https://docs.mapbox.com/help/tutorials/custom-markers-gl-js/ -->
       </button>
     </div>
   </form>
+  <% } %>
+
   <br /><br />
 </div>
-<% }) %> 
+<% }) %>
+
+<script>
+  let post = <%- JSON.stringify(post) %>
+</script>
+<script src="/javascripts/post-show.js"></script>
 
 <%- include("../partials/footer") -%>
