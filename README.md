@@ -1,13 +1,7 @@
-# Review Authorization
+# Restrict One Review Per User, Per Post
 
-- Create a second user with cURL.
-
-Sample:
-
-```
-  curl -d 'username=aarav&name=aarav&email=aarav@yahoo.com&password=password' -X POST http://localhost:3000/user/register
-```
-
-- Change existing review's author to new user's id
-- Add isReviewAuthor async middleware to PUT route and test it
-- Add if statement to EJS
+- Populate reviews on post in reviewCreate method (in reviews controller)
+- Filter post.reviews by author to see if logged in user has already reviewed the post
+- Assign hasReviewed to filtered array's length
+- If hasReviewed is true, then flash error and redirect
+- Otherwise, create review, add to post.reviews, save post, flash success, and redirect

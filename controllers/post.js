@@ -12,7 +12,6 @@ cloudinary.config({
 // Post Get
 let postIndex = async (req, res, next) => {
   let posts = await Post.find({});
-  console.log(posts);
   if (posts.length > 0) {
     res.render('post/index', { title: 'Post Index', posts: posts });
   } else {
@@ -53,7 +52,6 @@ let postCreate = async (req, res, next) => {
 
   let post = await Post.create(req.body);
   if (post) {
-    console.log(post);
     req.session.success = 'Post created successfully';
     res.redirect(`/post/${post._id}`);
   } else {
@@ -79,7 +77,6 @@ let postShow = async (req, res, next) => {
   });
 
   if (post) {
-    console.log(post);
     res.render('post/show', { title: 'Show Post', post });
   } else {
     // res.status(404).json({
@@ -95,7 +92,6 @@ let postShow = async (req, res, next) => {
 let postEdit = async (req, res, next) => {
   let post = await Post.findById(req.params.id);
   if (post) {
-    console.log(post);
     res.render('post/edit', { title: 'Edit Post', post });
   } else {
     // res.status(404).json({
@@ -160,7 +156,6 @@ let postUpdate = async (req, res, next) => {
 
   let updatedPost = await post.save();
   if (updatedPost) {
-    console.log(updatedPost);
     req.session.success = 'Post updated successfully';
     res.redirect(`/post/${post._id}`);
   } else {
@@ -180,7 +175,6 @@ let postDelete = async (req, res, next) => {
     await cloudinary.v2.uploader.destroy(image.public_id);
   }
   if (post) {
-    console.log(post);
     post.remove();
     req.session.success = 'Post deleted successfully';
     res.redirect('/post');

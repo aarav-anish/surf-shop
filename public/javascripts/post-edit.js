@@ -18,7 +18,6 @@ postEditForm.addEventListener('submit', (event) => {
   if (newTotal > 4) {
     event.preventDefault();
 
-    console.log(existingImages, imageUploads, imageDeletions);
     alert(
       `You need to delete at least ${newTotal - 4} more image${
         newTotal === 5 ? '' : 's'

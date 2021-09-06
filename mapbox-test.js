@@ -11,7 +11,6 @@ const rgeocoder = async (coordinates) => {
         limit: 1,
       })
       .send();
-    console.log(response.body);
   } catch (e) {
     console.log(e);
   }
@@ -26,8 +25,6 @@ const fgeocoder = async (location) => {
       })
       .send();
 
-    console.log(response.body.features[0].geometry.coordinates);
-    console.log('');
     rgeocoder(response.body.features[0].geometry.coordinates);
   } catch (e) {
     console.log(e);
