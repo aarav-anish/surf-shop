@@ -1,5 +1,13 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const Review = require('../models/review');
+const cloudinary = require('cloudinary');
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 var postSchema = new Schema({
   title: String,
@@ -18,6 +26,16 @@ var postSchema = new Schema({
       ref: 'Review',
     },
   ],
+});
+
+postSchema.pre('remove', async function () {
+  // remove images from cloudinary
+  for (const image of this.images) {
+    await cloudinary.v2.uploader.destroy(image.public_id);
+  }
+
+  // delete referenced reviews
+  await Review.remove({ _id: { $in: this.review } });
 });
 
 const Post = mongoose.model('Post', postSchema);

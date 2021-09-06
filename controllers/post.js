@@ -12,16 +12,7 @@ cloudinary.config({
 // Post Get
 let postIndex = async (req, res, next) => {
   let posts = await Post.find({});
-  if (posts.length > 0) {
-    res.render('post/index', { title: 'Post Index', posts: posts });
-  } else {
-    // res.status(404).json({
-    //   status: false,
-    //   message: 'no posts found',
-    // });
-
-    throw new Error('No posts found. Click on + to create a new post');
-  }
+  res.render('post/index', { title: 'Post Index', posts: posts });
 };
 
 // Post New
@@ -171,9 +162,6 @@ let postUpdate = async (req, res, next) => {
 // Post Delete
 let postDelete = async (req, res, next) => {
   let post = await Post.findById(req.params.id);
-  for (const image of post.images) {
-    await cloudinary.v2.uploader.destroy(image.public_id);
-  }
   if (post) {
     post.remove();
     req.session.success = 'Post deleted successfully';

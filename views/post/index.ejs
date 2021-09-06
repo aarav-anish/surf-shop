@@ -1,12 +1,16 @@
-<%- include('../partials/header') -%> <% posts.forEach((post) => { %>
+<%- include('../partials/header') -%> 
 
+<% if(posts.length === 0) { %>
+  <h3>No posts found. Click on + to create a new post</h3>
+<% } %>
+
+<% posts.forEach((post) => { %>
   <h1 class="heading"><%= post.title %></h1>
   <p><%= post.description %></p>
   <p><%= post.price %></p>
   <p><%= post.location %></p>
   <a href="/post/<%= post._id %> ">Read More</a>
   <br />
-
 <% }) %>
 
 <%- include('../partials/footer') -%>
