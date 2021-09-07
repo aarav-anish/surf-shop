@@ -34,8 +34,30 @@ https://docs.mapbox.com/help/tutorials/custom-markers-gl-js/ -->
       placeholder="Add new review"
       required
     ></textarea>
-    <label> Rating </label>
-    <input type="number" min="1" max="5" step="1" name="rating" required />
+
+    <fieldset class="starability-basic">
+      <legend>Rating:</legend>
+      <input
+        type="radio"
+        id="rate0"
+        class="input-no-rate"
+        name="rating"
+        value="0"
+        checked
+        aria-label="No rating."
+      />
+      <input type="radio" id="rate1" name="rating" value="1" />
+      <label for="rate1" title="Terrible">1 star</label>
+      <input type="radio" id="rate2" name="rating" value="2" />
+      <label for="rate2" title="Not good">2 stars</label>
+      <input type="radio" id="rate3" name="rating" value="3" />
+      <label for="rate3" title="Average">3 stars</label>
+      <input type="radio" id="rate4" name="rating" value="4" />
+      <label for="rate4" title="Very good">4 stars</label>
+      <input type="radio" id="rate5" name="rating" value="5" />
+      <label for="rate5" title="Amazing">5 stars</label>
+    </fieldset>
+
     <button class="btn btn-primary" type="submit" name="submit">Submit</button>
   </div>
 </form>
@@ -66,21 +88,38 @@ https://docs.mapbox.com/help/tutorials/custom-markers-gl-js/ -->
     <div class="form-group">
       <input type="hidden" name="postId" value="<%= post._id %>" />
       <textarea class="form-control" name="body"><%=review.body%></textarea>
-      <label> Rating </label>
-      <input
-        type="number"
-        min="1"
-        max="5"
-        step="1"
-        name="rating"
-        value="<%= review.rating %>"
-        required
-      />
+
+      <fieldset class="starability-basic">
+        <legend>Rating:</legend>
+        <input
+          type="radio"
+          id="edit-rate0"
+          class="input-no-rate"
+          name="rating"
+          value="0"
+          checked
+          aria-label="No rating."
+        />
+        <input type="radio" id="edit-rate1" name="rating" value="1" />
+        <label for="edit-rate1" title="Terrible">1 star</label>
+        <input type="radio" id="edit-rate2" name="rating" value="2" />
+        <label for="edit-rate2" title="Not good">2 stars</label>
+        <input type="radio" id="edit-rate3" name="rating" value="3" />
+        <label for="edit-rate3" title="Average">3 stars</label>
+        <input type="radio" id="edit-rate4" name="rating" value="4" />
+        <label for="edit-rate4" title="Very good">4 stars</label>
+        <input type="radio" id="edit-rate5" name="rating" value="5" />
+        <label for="edit-rate5" title="Amazing">5 stars</label>
+      </fieldset>
+
       <button class="btn btn-primary" type="submit" name="update">
         Update
       </button>
     </div>
   </form>
+  <script>
+    $('#edit-rate<%= review.rating %>').prop('checked', true);
+  </script>
   <% } %>
 
   <br /><br />
@@ -89,6 +128,7 @@ https://docs.mapbox.com/help/tutorials/custom-markers-gl-js/ -->
 
 <script>
   let post = <%- JSON.stringify(post) %>
+  let mapboxToken = '<%= mapboxToken %>'
 </script>
 <script src="/javascripts/post-show.js"></script>
 

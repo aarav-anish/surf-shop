@@ -35,6 +35,10 @@ body {
   display: inline;
 }
 
+legend {
+  width: 80px;
+}
+
 .icon {
   align-items: right;
   color: #f28482;

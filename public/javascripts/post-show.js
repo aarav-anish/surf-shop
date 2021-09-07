@@ -1,5 +1,4 @@
-mapboxgl.accessToken =
-  'pk.eyJ1IjoiYWFyYXYtYW5pc2giLCJhIjoiY2tzeXgzaGJ5Mmd6aTJwcG53eGwwNjdnOCJ9.nWIPFT3f0f1G_7IWJ9By1A';
+mapboxgl.accessToken = mapboxToken;
 const map = new mapboxgl.Map({
   container: 'map', // container ID
   style: 'mapbox://styles/mapbox/light-v10', // style URL

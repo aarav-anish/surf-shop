@@ -68,7 +68,11 @@ let postShow = async (req, res, next) => {
   });
 
   if (post) {
-    res.render('post/show', { title: 'Show Post', post });
+    res.render('post/show', {
+      title: 'Show Post',
+      post: post,
+      mapboxToken: process.env.MAPBOX_TOKEN,
+    });
   } else {
     // res.status(404).json({
     //   status: false,
