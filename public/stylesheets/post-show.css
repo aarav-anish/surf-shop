@@ -24,3 +24,11 @@
 .edit-review-form {
   display: none;
 }
+
+legend {
+  width: 80px;
+}
+
+.clear-rating {
+  display: block;
+}
