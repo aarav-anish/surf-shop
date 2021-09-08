@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const Review = require('../models/review');
 const cloudinary = require('cloudinary');
+const mongoosePaginate = require('mongoose-paginate-v2');
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -27,6 +28,8 @@ var postSchema = new Schema({
     },
   ],
 });
+
+postSchema.plugin(mongoosePaginate);
 
 postSchema.pre('remove', async function () {
   // remove images from cloudinary

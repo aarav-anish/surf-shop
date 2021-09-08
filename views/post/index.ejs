@@ -4,7 +4,9 @@
   <h3>No posts found. Click on + to create a new post</h3>
 <% } %>
 
-<% posts.forEach((post) => { %>
+<%- include ('../partials/paginatePosts') -%>
+
+<% posts.docs.forEach((post) => { %>
   <h1 class="heading"><%= post.title %></h1>
   <p><%= post.description %></p>
   <p><%= post.price %></p>
@@ -12,5 +14,7 @@
   <a href="/post/<%= post._id %> ">Read More</a>
   <br />
 <% }) %>
+
+<%- include ('../partials/paginatePosts') -%>
 
 <%- include('../partials/footer') -%>

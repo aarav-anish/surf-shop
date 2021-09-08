@@ -1,24 +1,73 @@
-# Add Clear Rating Button to 5 Star Rating Feature
+# Add Pagination to Posts Index
 
-- Add a button to the new/edit review forms in /views/posts/show.ejs:
-
-```HTML
-<button class="clear-rating" type="button">Clear Rating</button>
-```
-
-- Add styling to /public/stylesheets/post-show.css
-
-```CSS
-.clear-rating {
-  display: block;
-}
-```
-
-- Add click listener to the clear rating button in /public/javascripts/post-show.js (selects and clicks nearest zero star rating input):
-
-```JS
-// Add click listener for clearing of rating from edit/create form
-$('.clear-rating').click(function() {
-	$(this).siblings('.input-no-rate').click();
-});
-```
+- Seed some post data
+  - Install faker
+    `npm i faker`
+  - Create a seeds.js file in the root directory /surf-shop and open it
+  - Require faker
+    `const faker = require('faker');`
+  - Require Post model
+    `const Post = require('./models/post');`
+  - Write an async function that removes existing posts and runs a loop that generates 40 posts
+  ```JS
+  async function seedPosts() {
+  	await Post.remove({});
+  	for (const i of new Array(40)) {
+        const newPost = {
+          title: faker.lorem.words(),
+          description: faker.lorem.paragraph(),
+          price: faker.datatype.number(),
+          location: faker.lorem.word(),
+          author: '61346591dce12959b4ab9fc8',
+        };
+  	  await Post.create(post);
+  	}
+  	console.log('40 new posts created');
+  }
+  ```
+  - Export the function
+    `module.exports = seedPosts;`
+  - Require the seedPosts function and invoke it in app.js
+  ```JS
+  const seedPosts = require('./seeds');
+  seedPosts();
+  ```
+- Install mongoose-paginate
+  `npm i mongoose-paginate-v2`
+- Add mongoose-paginate to Post model
+  ```JS
+  const mongoosePaginate = require('mongoose-paginate-v2');
+  ...
+  PostSchema.plugin(mongoosePaginate);
+  ```
+- Update postIndex method in /controllers/posts.js to include pagination in query
+  ```JS
+  // Posts Index
+  async postIndex(req, res, next) {
+  	let posts = await Post.paginate({}, {
+  		page: req.query.page || 1,
+  		limit: 10
+  	});
+  	res.render('posts/index', { posts, title: 'Posts Index' });
+  },
+  ```
+- Update loop over posts in /views/posts/index.ejs so that it loops over posts.docs now
+  ```JS
+  <% posts.docs.forEach(function(post) { %>
+  ```
+- Create a paginatePosts.ejs partial in /views/partials
+  ```HTML
+  <div style="margin: 20px 0">
+  <% if(posts.page - 1) { %>
+  	<a href="/posts?page=<%= posts.page - 1 %>">Prev</a>
+  <% } %>
+  <% for(let i = 1; i <= posts.pages; i++) { %>
+  	<a href="/posts?page=<%= i %>" <%= i === posts.page ? 'style=color:#000' : '' %>><%= i %></a>
+  <% } %>
+  <% if((posts.page + 1) <= posts.pages) { %>
+  	<a href="/posts?page=<%= posts.page + 1 %>">Next</a>
+  <% } %>
+  </div>
+  ```
+- Include the partial in your /views/posts/index.ejs view (I include it twice, once above the posts loop and once below)
+  `<%- include ('../partials/paginatePosts') -%>`

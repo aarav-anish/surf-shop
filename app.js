@@ -10,6 +10,8 @@ const methodOverride = require('method-override');
 const passport = require('passport');
 const passportLocalMongoose = require('passport-local-mongoose');
 const User = require('./models/user');
+// const { seedPosts } = require('./seeds');
+// seedPosts();
 
 const { preRoute } = require('./middleware/pre-route');
 const { errorHandler, notFound } = require('./middleware/errors');
