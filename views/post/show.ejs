@@ -13,6 +13,18 @@ https://docs.mapbox.com/help/tutorials/custom-markers-gl-js/ -->
 <p><%= post.price %></p>
 <p><%= post.location %></p>
 
+<% for(let i=0; i<5; i++) { %>
+  <% if( i < floorRating ) { %>
+    <i class="fas fa-2x fa-star" style="color: #ffc107;"></i>
+  <% } else if( (post.avgRating-i) > 0 && (post.avgRating-i) < 1 ) { %>
+    <i class="fas fa-2x fa-star-half-alt" style="color: #ffc107;"></i>
+  <% } else { %>
+    <i class="far fa-2x fa-star"></i>
+  <% } %>
+<% } %>
+
+<h5><%= `${post.avgRating} star${post.avgRating <= 1? '': 's'}` %> </h5>
+
 <div id="map"></div>
 
 <a href="/post/edit/<%= post._id %> ">

@@ -27,9 +27,8 @@ var postSchema = new Schema({
       ref: 'Review',
     },
   ],
+  avgRating: { type: Number, default: 0 },
 });
-
-postSchema.plugin(mongoosePaginate);
 
 postSchema.pre('remove', async function () {
   // remove images from cloudinary
@@ -40,6 +39,23 @@ postSchema.pre('remove', async function () {
   // delete referenced reviews
   await Review.remove({ _id: { $in: this.review } });
 });
+
+postSchema.methods.calculateAvgRating = function () {
+  let totalRating = 0;
+  if (this.review.length) {
+    this.review.forEach((item) => {
+      totalRating += item.rating;
+    });
+    this.avgRating = Math.round((totalRating / this.review.length) * 10) / 10;
+  } else {
+    this.avgRating = totalRating;
+  }
+  let floorRating = Math.floor(this.avgRating);
+  this.save();
+  return floorRating;
+};
+
+postSchema.plugin(mongoosePaginate);
 
 const Post = mongoose.model('Post', postSchema);
 

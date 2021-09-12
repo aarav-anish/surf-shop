@@ -1,6 +1,7 @@
 const preRoute = (req, res, next) => {
   req.user = {
     _id: '61346591dce12959b4ab9fc8',
+    // _id: '6135060622170621582a830c',
     username: 'anish',
   };
   res.locals.currentUser = req.user;

@@ -75,9 +75,11 @@ let postShow = async (req, res, next) => {
   });
 
   if (post) {
+    let floorRating = post.calculateAvgRating();
     res.render('post/show', {
       title: 'Show Post',
       post: post,
+      floorRating: floorRating,
       mapboxToken: process.env.MAPBOX_TOKEN,
     });
   } else {
