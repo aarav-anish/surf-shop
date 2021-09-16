@@ -25,7 +25,7 @@ let seedPosts = async (req, res, next) => {
     };
     let post = new Post(postData);
     post.properties.description = `<strong><a href="/post/${post._id}">${title}</a></strong><p>${post.location}</p><p>${description.substring(0, 20)}...</p>`;
-    post.save();
+    await post.save();
   }
   console.log('600 new posts created');
 };

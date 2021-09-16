@@ -17,6 +17,7 @@ let postIndex = async (req, res, next) => {
     {
       page: req.query.page || 1,
       limit: 10,
+      sort: { _id: -1 }
     },
   );
   res.render('post/index', {
@@ -42,18 +43,18 @@ let postCreate = async (req, res, next) => {
     });
   }
 
-  if (req.body.location) {
-    let response = await geocodingClient
-      .forwardGeocode({
-        query: req.body.location,
-        limit: 1,
-      })
-      .send();
-    req.body.coordinates = response.body.features[0].geometry.coordinates;
-  }
+  let response = await geocodingClient
+    .forwardGeocode({
+      query: req.body.location,
+      limit: 1,
+    })
+    .send();
+  req.body.geometry = response.body.features[0].geometry;
 
-  let post = await Post.create(req.body);
-  if (post) {
+  let post = new Post(req.body);
+  post.properties.description = `<strong><a href="/post/${post._id}">${post.title}</a></strong><p>${post.location}</p><p>${post.description.substring(0, 20)}...</p>`;
+  let newPost = await post.save();
+  if (newPost) {
     req.session.success = 'Post created successfully';
     res.redirect(`/post/${post._id}`);
   } else {
@@ -153,7 +154,7 @@ let postUpdate = async (req, res, next) => {
         limit: 1,
       })
       .send();
-    post.coordinates = response.body.features[0].geometry.coordinates;
+    post.geometry = response.body.features[0].geometry;
     post.location = req.body.location;
   }
 
@@ -161,6 +162,7 @@ let postUpdate = async (req, res, next) => {
   post.title = req.body.title;
   post.description = req.body.description;
   post.price = req.body.price;
+  post.properties.description = `<strong><a href="/post/${post._id}">${post.title}</a></strong><p>${post.location}</p><p>${post.description.substring(0, 20)}...</p>`;
 
   let updatedPost = await post.save();
   if (updatedPost) {

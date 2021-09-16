@@ -16,9 +16,10 @@
         placeholder="title"
         name="title"
         value="<%= post.title %>"
+        required
       />
       <label> Description </label>
-      <textarea class="form-control" name="description" cols="30" rows="10">
+      <textarea class="form-control" name="description" cols="30" rows="10" required>
 <%= post.description %></textarea
       >
       <label> Images </label>
@@ -48,6 +49,7 @@
         placeholder="price"
         name="price"
         value="<%= post.price %>"
+        required
       />
       <label> Location </label>
       <input
@@ -56,6 +58,7 @@
         placeholder="location"
         name="location"
         value="<%= post.location %>"
+        required
       />
       <button class="btn btn-primary" type="submit" name="edit">Edit</button>
     </div>
