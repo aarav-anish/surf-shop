@@ -1,8 +1,19 @@
+/*
+ *
+ *
+ * 
+  Tutorial followed for displaying map: 
+  https://docs.mapbox.com/help/tutorials/custom-markers-gl-js/
+ *
+ *
+ * 
+ */
+
 mapboxgl.accessToken = mapboxToken;
 const map = new mapboxgl.Map({
   container: 'map', // container ID
   style: 'mapbox://styles/mapbox/light-v10', // style URL
-  center: post.coordinates, // starting position [lng, lat]
+  center: post.geometry.coordinates, // starting position [lng, lat]
   zoom: 5, // starting zoom
 });
 
@@ -12,10 +23,10 @@ el.className = 'marker';
 
 // make a marker for location and add to the map
 new mapboxgl.Marker(el)
-  .setLngLat(post.coordinates)
+  .setLngLat(post.geometry.coordinates)
   .setPopup(
     new mapboxgl.Popup({ offset: 25 }) // add popups
-      .setHTML(`<h3>${post.title}</h3><p>${post.location}</p>`),
+      .setHTML(`<strong>${post.title}</strong><p>${post.location}</p>`),
   )
   .addTo(map);
 

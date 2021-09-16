@@ -1,7 +1,8 @@
 const Post = require('../models/post');
 const cloudinary = require('cloudinary');
 const mbxGeocoding = require('@mapbox/mapbox-sdk/services/geocoding');
-const geocodingClient = mbxGeocoding({ accessToken: process.env.MAPBOX_TOKEN });
+const mapboxToken = process.env.MAPBOX_TOKEN;
+const geocodingClient = mbxGeocoding({ accessToken: mapboxToken });
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -18,8 +19,11 @@ let postIndex = async (req, res, next) => {
       limit: 10,
     },
   );
-  console.log(posts);
-  res.render('post/index', { title: 'Post Index', posts: posts });
+  res.render('post/index', {
+    title: 'Post Index',
+    posts: posts,
+    mapboxToken: mapboxToken,
+  });
 };
 
 // Post New
@@ -80,7 +84,7 @@ let postShow = async (req, res, next) => {
       title: 'Show Post',
       post: post,
       floorRating: floorRating,
-      mapboxToken: process.env.MAPBOX_TOKEN,
+      mapboxToken: mapboxToken,
     });
   } else {
     // res.status(404).json({

@@ -1,6 +1,17 @@
+<!-- Tutorial followed for cluster maps
+https://docs.mapbox.com/mapbox-gl-js/example/cluster/ -->
+
 <%- include('./partials/header') -%>
 
-  <h1><%= title %></h1>
-  <p><%= title %></p>
+<h1><%= title %></h1>
+<p><%= title %></p>
+
+<div id="map"></div>
+
+<script>
+  let posts = {features: <%- JSON.stringify(posts) %>}
+  mapboxgl.accessToken = '<%= mapboxToken %>'
+</script>
+<script src="/javascripts/allPostsClusterMap.js"></script>
 
 <%- include("./partials/footer") -%>
