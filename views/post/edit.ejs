@@ -19,7 +19,13 @@
         required
       />
       <label> Description </label>
-      <textarea class="form-control" name="description" cols="30" rows="10" required>
+      <textarea
+        class="form-control"
+        name="description"
+        cols="30"
+        rows="10"
+        required
+      >
 <%= post.description %></textarea
       >
       <label> Images </label>
@@ -32,14 +38,14 @@
       />
       <div>
         <% post.images.forEach((image) => { %>
-          <img src="<%= image.url %> " alt="surf-image" width="200px" />
-          <input 
-            name="deleteImages[]" 
-            type="checkbox" 
-            class="imagesDeleteCheckbox" 
-            value="<%= image.public_id %>"
-          />
-          <label> Delete ? </label>
+        <img src="<%= image.path %> " alt="surf-image" width="200px" />
+        <input
+          name="deleteImages[]"
+          type="checkbox"
+          class="imagesDeleteCheckbox"
+          value="<%= image.filename %>"
+        />
+        <label> Delete ? </label>
         <% }) %>
       </div>
       <label> Price </label>

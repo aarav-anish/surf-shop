@@ -1,14 +1,8 @@
 const Post = require('../models/post');
-const cloudinary = require('cloudinary');
+const { cloudinary } = require('../cloudinary');
 const mbxGeocoding = require('@mapbox/mapbox-sdk/services/geocoding');
 const mapboxToken = process.env.MAPBOX_TOKEN;
 const geocodingClient = mbxGeocoding({ accessToken: mapboxToken });
-
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-});
 
 // Post Get
 let postIndex = async (req, res, next) => {
@@ -17,7 +11,7 @@ let postIndex = async (req, res, next) => {
     {
       page: req.query.page || 1,
       limit: 10,
-      sort: { _id: -1 }
+      sort: { _id: -1 },
     },
   );
   res.render('post/index', {
@@ -36,10 +30,10 @@ let postNew = async (req, res, next) => {
 let postCreate = async (req, res, next) => {
   req.body.images = [];
   for (const file of req.files) {
-    let image = await cloudinary.v2.uploader.upload(file.path);
+    // let image = await cloudinary.v2.uploader.upload(file.path);
     req.body.images.push({
-      url: image.secure_url,
-      public_id: image.public_id,
+      path: file.path,
+      filename: file.filename,
     });
   }
 
@@ -125,12 +119,12 @@ let postUpdate = async (req, res, next) => {
   }
   let deleteImages = req.body.deleteImages;
   if (deleteImages?.length > 0) {
-    for (const public_id of deleteImages) {
+    for (const filename of deleteImages) {
       // delete images from cloudinary
-      await cloudinary.v2.uploader.destroy(public_id);
+      await cloudinary.uploader.destroy(filename);
       // delete image from post.images
       post.images.forEach((image, index) => {
-        if (image.public_id === public_id) {
+        if (image.filename === filename) {
           post.images.splice(index, 1);
         }
       });
@@ -139,10 +133,10 @@ let postUpdate = async (req, res, next) => {
 
   if (req.files) {
     for (const file of req.files) {
-      let image = await cloudinary.v2.uploader.upload(file.path);
+      // let image = await cloudinary.v2.uploader.upload(file.path);
       post.images.push({
-        url: image.secure_url,
-        public_id: image.public_id,
+        path: file.path,
+        filename: file.filename,
       });
     }
   }
