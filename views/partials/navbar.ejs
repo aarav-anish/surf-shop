@@ -16,9 +16,21 @@
       <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
         <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
         <li class="nav-item"><a class="nav-link" href="/post">Posts</a></li>
+        <% if(currentUser) { %>
         <li class="nav-item">
           <a class="nav-link" href="/post/new">New Post</a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/user/logout">Logout</a>
+        </li>
+        <% } else { %>
+        <li class="nav-item">
+          <a class="nav-link" href="/user/register">Register</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/user/login">Login</a>
+        </li>
+        <% } %>
       </ul>
     </div>
   </div>

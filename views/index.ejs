@@ -3,6 +3,10 @@ https://docs.mapbox.com/mapbox-gl-js/example/cluster/ -->
 
 <%- include('./partials/header') -%>
 
+<% if(currentUser) { %> 
+  <h3>Welcome, <%= currentUser.username %>!</h3>
+<% } %> 
+
 <h1><%= title %></h1>
 <p><%= title %></p>
 

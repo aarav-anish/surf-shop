@@ -1,0 +1,28 @@
+<%- include('../partials/header') -%>
+
+<div>
+  <h1>Great to see you again. Please login to continue</h1>
+  <form method="POST" action="/user/login">
+    <div class="form-group">
+      <label> Username </label>
+      <input
+        class="form-control"
+        type="text"
+        placeholder="username"
+        name="username"
+        required
+      />
+      <label> Password </label>
+      <input
+        class="form-control"
+        type="password"
+        placeholder="password"
+        name="password"
+        required
+      />
+      <button class="btn btn-primary" type="submit" name="login">Login</button>
+    </div>
+  </form>
+</div>
+
+<%- include('../partials/footer') -%>

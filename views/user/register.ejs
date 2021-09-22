@@ -1,0 +1,48 @@
+<%- include('../partials/header') -%>
+
+<div>
+  <h1>We will be happy to have you here!</h1>
+  <form method="POST" action="/user/register">
+    <div class="form-group">
+      <label> Username </label>
+      <input
+        class="form-control"
+        type="text"
+        placeholder="username"
+        name="username"
+        required
+      />
+      <label> Name </label>
+      <input
+        class="form-control"
+        type="text"
+        placeholder="full name"
+        name="name"
+        required
+      />
+      <label> Email </label>
+      <input
+        class="form-control"
+        type="text"
+        placeholder="email"
+        name="email"
+        required
+      />
+      <label> Password </label>
+      <input
+        class="form-control"
+        type="password"
+        placeholder="password"
+        name="password"
+        required
+      />
+      <label>Image</label>
+      <input class="form-control" type="file" name="image" />
+      <button class="btn btn-primary" type="submit" name="register">
+        Register
+      </button>
+    </div>
+  </form>
+</div>
+
+<%- include('../partials/footer') -%>

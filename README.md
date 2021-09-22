@@ -1,111 +1,192 @@
-# Remove Local Image Storage
+# Continue User Authentication and Authorization
 
-## Delete /uploads directory from app's root directory
+## Update Register and Login
 
-- Navigate to root directory of surf-shop app in your terminal and run `rm -rf ./uploads`
-
-## Install multer-storage-cloudinary
-
-- `npm i multer-storage-cloudinary`
-
-## Configure Cloudinary and Storage
-
-- Create a folder named `cloudinary` in the app's root directory
-- Create an `index.js` file inside of the new /cloudinary directory
-- Add the following code to the /cloudinary/index.js file and save it:
+- Comment out the req.user object assignment in app.js where you're setting a user to always be logged in:
 
 ```JS
-const crypto = require('crypto');
-const cloudinary = require('cloudinary').v2;
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-});
-
-const { CloudinaryStorage } = require('multer-storage-cloudinary');
-
-const storage = new CloudinaryStorage({
-  cloudinary: cloudinary,
-  params: {
-    folder: 'surf-shop',
-    allowed_formats: ['jpeg', 'jpg', 'png'],
-    use_filename: true,
-    filename_override: (req, file) => {
-      let buf = crypto.randomBytes(16);
-      buf = buf.toString('hex');
-      let uniqFileName = file.originalname.replace(/\.jpeg|\.jpg|\.png/gi, '');
-      uniqFileName += buf;
-      return uniqFileName;
-    },
-  },
-});
-
-module.exports = { cloudinary, storage };
+// req.user = {
+//   _id: '61346591dce12959b4ab9fc8',
+//   // _id: '6135060622170621582a830c',
+//   username: 'anish',
+// };
 ```
 
-- Be sure to change cloud_name and api_key values (they're currently located in your `/controllers/posts.js` file)
-
-## Update /models/posts.js
-
-- Remove:
+- Add a getRegister method to /controllers/user.js right before existing postRegister method
 
 ```JS
-const cloudinary = require('cloudinary');
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-});
+// GET /user/register
+let getRegister = (req, res, next) {
+	res.render('register', { title: 'Register' });
+},
 ```
 
-- Add: `const { cloudinary } = require('../cloudinary');`
-- Remove: `images: [{ url: String, public_id: String }],`
-- Remove: `await cloudinary.v2.uploader.destroy(image.public_id);`
-- Add: `images: [{ path: String, filename: String }],`
-- Add: `await cloudinary.uploader.destroy(image.filename);`
-
-## Update /routes/posts.js
-
-- Remove: `const upload = multer({'dest': 'uploads/'});`
-- Add: `const { cloudinary, storage } = require('../cloudinary');`
-- Add: `const upload = multer({ storage });`
-
-## /controllers/posts.js
-
-- Remove:
+- Add getLogin method to /controllers/user.js right before existing postLogin method
 
 ```JS
-const cloudinary = require('cloudinary');
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-});
+// GET /user/login
+let getLogin = (req, res, next) {
+	res.render('login', { title: 'Login' });
+},
 ```
 
-- Add: `const { cloudinary } = require('../cloudinary');`
-- Inside both the `postCreate` and `postUpdate` methods, change:
+- Add success authentication message in postRegister method inside of /controllers/user.js
 
 ```JS
-for(const file of req.files) {
-	let image = await cloudinary.v2.uploader.upload(file.path);
-	req.body.post.images.push({
-		url: image.secure_url,
-		public_id: image.public_id
-	});
-}
+req.session.success = `Welcome to Surf Shop, ${newUser.username}!`;
 ```
 
-to:
+- Add getRegister and getLogin methods to /routes/user.js
+
+## Create Register and Login Views
+
+- Create a new file inside of /views/user named register.ejs
+- Add the following markup to it:
+
+```HTML
+<%- include('../partials/header') -%>
+
+<div>
+  <h1>We will be happy to have you here!</h1>
+  <form method="POST" action="/user/register">
+    <div class="form-group">
+      <label> Username </label>
+      <input
+        class="form-control"
+        type="text"
+        placeholder="username"
+        name="username"
+        required
+      />
+      <label> Name </label>
+      <input
+        class="form-control"
+        type="text"
+        placeholder="full name"
+        name="name"
+        required
+      />
+      <label> Email </label>
+      <input
+        class="form-control"
+        type="text"
+        placeholder="email"
+        name="email"
+        required
+      />
+      <label> Password </label>
+      <input
+        class="form-control"
+        type="password"
+        placeholder="password"
+        name="password"
+        required
+      />
+      <label>Image</label>
+      <input class="form-control" type="file" name="image" />
+      <button class="btn btn-primary" type="submit" name="register">
+        Register
+      </button>
+    </div>
+  </form>
+</div>
+
+<%- include('../partials/footer') -%>
+```
+
+- Create a new file inside of /views/user named login.ejs
+- Add the following markup to it:
+
+```HTML
+<%- include('../partials/header') -%>
+
+<div>
+  <h1>Great to see you again. Please login to continue</h1>
+  <form method="POST" action="/user/login">
+    <div class="form-group">
+      <label> Username </label>
+      <input
+        class="form-control"
+        type="text"
+        placeholder="username"
+        name="username"
+        required
+      />
+      <label> Password </label>
+      <input
+        class="form-control"
+        type="password"
+        placeholder="password"
+        name="password"
+        required
+      />
+      <button class="btn btn-primary" type="submit" name="login">Login</button>
+    </div>
+  </form>
+</div>
+
+<%- include('../partials/footer') -%>
+```
+
+## Update navbar partial
+
+- Replace entire /views/partials/navbar.ejs file with:
+
+```HTML
+<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+  <div class="container">
+    <a class="navbar-brand">SURF SHOP</a>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarTogglerDemo02"
+      aria-controls="navbarTogglerDemo02"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="/post">Posts</a></li>
+        <% if(currentUser) { %>
+        <li class="nav-item">
+          <a class="nav-link" href="/post/new">New Post</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/user/logout">Logout</a>
+        </li>
+        <% } else { %>
+        <li class="nav-item">
+          <a class="nav-link" href="/user/register">Register</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/user/login">Login</a>
+        </li>
+        <% } %>
+      </ul>
+    </div>
+  </div>
+</nav>
+```
+
+## Enforce Unique Emails
+
+- Add checkIfUserExists method inside /middleware/errors.js file
 
 ```JS
-for(const file of req.files) {
-	req.body.post.images.push({
-		path: file.path,
-		filename: file.filename
-	});
-}
+const checkIfUserExists = async (req, res, next) => {
+  let user = await User.findOne({ email: req.body.email });
+  if (user) {
+    req.session.error = 'A user with the given email is already registered';
+    res.redirect('back');
+  }
+  next();
+};
 ```
 
-### Replace all the occurences of (url and secure_url) with path and public_id with filename
+## Add Authorization Middleware
+
+- Still needs to be done...

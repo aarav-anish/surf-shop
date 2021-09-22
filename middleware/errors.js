@@ -1,4 +1,5 @@
 const Review = require('../models/review');
+const User = require('../models/user');
 
 const errorHandler = (error, req, res, next) => {
   // const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
@@ -50,9 +51,19 @@ const isReviewAuthor = async (req, res, next) => {
   return res.redirect('/');
 };
 
+const checkIfUserExists = async (req, res, next) => {
+  let user = await User.findOne({ email: req.body.email });
+  if (user) {
+    req.session.error = 'A user with the given email is already registered';
+    res.redirect('back');
+  }
+  next();
+};
+
 module.exports = {
   notFound,
   errorHandler,
   asyncErrorHandler,
   isReviewAuthor,
+  checkIfUserExists,
 };
